@@ -1,0 +1,3 @@
+We need an HTTP training service in /app that trains a deterministic logistic regression model from scratch without any external machine learning packages. The system must decode custom binary blobs from a provided SQLite database and store the extracted feature vectors in a local in-memory store.
+
+Please expose endpoints for /fit, /checkpoint, /resume, and /score across a multi-file architecture in the /app directory. Our test suite will run property checks on the decoder round trips, verify strict loss monotonicity on separable data, and confirm identical predictions after recovering a checkpoint.

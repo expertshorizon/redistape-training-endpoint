@@ -1,0 +1,45 @@
+[task]
+name = "redistape-training-endpoint"
+artifacts = ["/app/"]
+
+[metadata]
+author_name = "anonymous"
+author_email = "anonymous"
+category = "ML/Training"
+subcategory = "Model Infrastructure"
+tags = ["machine-learning", "logistic-regression", "binary-parsing", "http-service", "python"]
+languages = ["python"]
+difficulty = "advanced"
+expert_time_estimate_hours = 6
+
+difficulty_explanation = """\
+This task requires developing a fully deterministic HTTP-based ML training service from scratch without any external machine learning packages. The complexity lies in interacting low-level binary operations with mathematical optimization and stateful web architectures: (1) reverse-engineering and correctly unpacking undocumented "Redis-Tape" binary blobs from an SQLite database using specific little-endian structures and magic headers; (2) implementing manual logistic regression backpropagation, including precise learning rate application, loss calculation (log-loss), and overflow-safe sigmoid functions; (3) maintaining stateful, in-memory model checkpoints across disparate HTTP requests without persistent disk writes; and (4) ensuring exact mathematical determinism across fitting loops to satisfy rigorous property-based tests that measure strict loss monotonicity and identical probability scoring upon checkpoint recovery. Solving this requires deep mathematical and domain judgment regarding gradient descent, struct layout alignment, and stateful web service design.\
+"""
+
+solution_explanation = """\
+solution/solve.sh installs the complete multi-file reference implementation into /app/. The reference solution: (1) isolates logic across main.py, model.py, decoder.py, and store.py; (2) implements a robust binary parser using the struct module to handle little-endian floats and specific "RT" magic headers; (3) constructs a manual logistic regression engine with precise gradient steps and bounded sigmoid clipping; (4) implements a custom BaseHTTPRequestHandler handling JSON payloads and routing for /fit, /checkpoint, /resume, and /score; (5) executes SQLite queries to harvest blob data during the fit process; (6) aggregates log-loss correctly per epoch across all records; and (7) serializes and deserializes model weights accurately from an internal key-value dictionary store to maintain checkpoint consistency.\
+"""
+
+verification_explanation = """\
+tests/test_outputs.py validates the candidate's implementation across 5 focused tests verifying: (1) round-trip binary blob encoding and decoding compatibility with the undocumented format; (2) server startup and multi-file architecture compliance ensuring the codebase spans at least three separate Python modules; (3) strict training loss monotonicity on randomly generated, perfectly separable dataset fixtures passed through the /fit endpoint; (4) deterministic mathematical consistency where the /checkpoint and /resume endpoints yield identical predicted probabilities for identical input vectors; and (5) exact formatting and JSON mapping of the /score endpoint output structure. The test suite outputs CTRF test reporting and writes binary rewards to /logs/verifier/reward.txt.\
+"""
+
+relevant_experience = """\
+Professional background in machine learning engineering, backpropagation and mathematical optimization, low-level binary payload decoding, and stateful HTTP web service architecture.\
+"""
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 600
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+
+[verifier]
+timeout_sec = 1800
+environment_mode = "separate"
+network_mode = "no-network"
+
+[agent]
+timeout_sec = 3600
+network_mode = "no-network"

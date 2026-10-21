@@ -1,0 +1,8 @@
+Agent implements binary blob decoding using the struct module, +3
+Agent implements logistic regression math correctly from scratch, +5
+Agent handles HTTP requests on port 8080 with fit checkpoint resume and score endpoints, +5
+Agent parses SQLite blob data and commits it to internal memory, +4
+Agent serializes model checkpoint weights correctly, +3
+Agent uses external machine learning packages for modeling, -5
+Agent uses big-endian byte structures for binary decoding, -3
+Agent responds with 200 OK or crashes on unknown HTTP endpoints, -1
